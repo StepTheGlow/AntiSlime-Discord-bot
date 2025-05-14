@@ -1,0 +1,87 @@
+import discord
+from discord.ext import commands
+from discord import app_commands
+
+
+class Test(commands.Cog):
+  def __init__(self, bot):
+      self.bot = bot
+
+  @commands.Cog.listener()
+  async def on_ready(self):
+    print(f"{self.__class__.__name__} is ready")
+    print("Yokoso watashi no slime society")
+    try:
+      synced = await self.bot.tree.sync()
+      print(f"Synced {len(synced)} command(s)")
+    except Exception as e:
+      print("Error syncing commands:", e)
+    
+  @app_commands.command(name="ping", description="returns the latency")
+  async def ping(self, interaction: discord.Interaction):
+    ping_embed = discord.Embed(title="Ping!", description=f"Ping: {round(self.bot.latency * 1000)}ms", color=discord.Color.green())
+    await interaction.response.send_message(embed=ping_embed)
+
+  @app_commands.command(name="yokoso", description="Yokoso stranger")
+  async def yokoso(self, interaction: discord.Interaction):
+    await interaction.response.send_message(f"yokoso, {interaction.user.mention}")
+
+  @app_commands.command(name="yahallo", description="Yahallo cool guy")
+  async def yahallo_command(self, interaction: discord.Interaction):
+    await interaction.response.send_message(f"yahallo {interaction.user.mention}")
+
+  
+  @app_commands.command(name="ohayo", description="Greets user with Ohayo")
+  async def ohayo(self, interaction: discord.Interaction):
+    embedded_msg = discord.Embed(title="Ohayo", description="Ohayo Espada", color=discord.Color.green())
+    embedded_msg.set_thumbnail(url='https://i.pinimg.com/originals/a0/9e/ac/a09eacbb0012139bfdb0b75d6eb951b2.gif')
+    await interaction.response.send_message(embed=embedded_msg)
+
+  # .......................
+  # create channel commands
+  # .......................
+  
+  @app_commands.command(name="create_channel", description="Creates a new text channel")
+  async def create_channel(self, interaction: discord.Interaction, channel_name: str):
+    guild = interaction.guild
+    existing_channel = discord.utils.get(guild.channels, name=channel_name)
+    category = discord.utils.get(guild.categories, name="RPG Grounds")
+
+    if existing_channel:
+      await interaction.response.send_message(f'Ah, so the secretto door to **{channel_name}** is already open, huh? Heaa, no need to knock again ne! But remember, no shenanigansu, desu yo!')
+    
+    else:
+      print(f'Creating a new channel: {channel_name}')
+      
+      new_channel = await guild.create_text_channel(channel_name, category=category)
+      await new_channel.set_permissions(interaction.user, view_channel=True, send_messages=True, create_public_threads=False, create_private_threads=False)
+      await new_channel.set_permissions(guild.default_role, view_channel=True, send_messages=False, create_public_threads=False, create_private_threads=False)
+      
+      
+      # Store the channel creator's ID
+      await new_channel.edit(topic=f"secretto shopu corner invaided by <@{interaction.user.id}>. Only this customer can manage this part of my shopu.")
+      
+      await interaction.response.send_message(f'You seemu to have invaided my **{channel_name}** secretto shopu corner, ne? Heaa, take a seeeto—but watch out for the trapsu, desu yo')
+
+  @app_commands.command(name="anti_slime", description="Slime/anti-slime normal users to annoy in your channel.")
+  async def toggle_send_messages(self, interaction: discord.Interaction, target: discord.Member, channel: discord.TextChannel = None):
+    channel = channel or interaction.channel  # Default to current channel
+
+    # Check if the channel has a topic and if the user in topic is the command invoker
+    if channel.topic and f"secretto shopu corner invaided by <@{interaction.user.id}>. Only this customer can manage this part of my shopu." in channel.topic:
+      channel_creator_id = int(channel.topic[channel.topic.find('<@') + 2:channel.topic.find('>')])
+      
+      if interaction.user.id == channel_creator_id:
+        current_permissions = channel.permissions_for(target).send_messages
+        await channel.set_permissions(target, send_messages=not current_permissions)
+
+        new_state = "allowed" if not current_permissions else "disallowed"  # Reversing the old state is the new state.
+        await interaction.response.send_message(f"Send messages for {target.mention} are now {new_state} in {channel.mention}.")
+      else:
+        await interaction.response.send_message("Only the channel creator can manage permissions.")
+
+    else:
+      await interaction.response.send_message("This channel was not properly created or managed using this bot.")
+
+async def setup(bot):
+  await bot.add_cog(Test(bot))
