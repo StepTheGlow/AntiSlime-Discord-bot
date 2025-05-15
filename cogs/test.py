@@ -56,7 +56,7 @@ class Test(commands.Cog):
       new_channel = await guild.create_text_channel(channel_name, category=category)
       await new_channel.set_permissions(interaction.user, view_channel=True, send_messages=True, create_public_threads=False, create_private_threads=False)
       await new_channel.set_permissions(guild.default_role, view_channel=True, send_messages=False, create_public_threads=False, create_private_threads=False)
-      
+      await new_channel.set_permissions(guild.me, view_channel=False)
       
       # Store the channel creator's ID
       await new_channel.edit(topic=f"secretto shopu corner invaided by <@{interaction.user.id}>. Only this customer can manage this part of my shopu.")
