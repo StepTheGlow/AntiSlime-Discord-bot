@@ -66,9 +66,8 @@ class Test(commands.Cog):
   @app_commands.command(name="slime", description="Allow a user to send messages in this channel.")
   async def allow_send_messages(self, interaction: discord.Interaction, target: discord.Member, channel: discord.TextChannel = None):
     channel = channel or interaction.channel  # Default to current channel
-    channel_creator_id = int(channel.topic[channel.topic.find('<@') + 2:channel.topic.find('>')])
     
-    if channel_creator_id == discord.interactions.id:
+    if channel.topic == f"secretto shopu corner invaided by <@{interaction.user.id}>. Only this customer can manage this part of my shopu.":
       await channel.set_permissions(target, send_messages=True)
       await interaction.response.send_message(f"Send messages for {target.mention} are now allowed in {channel.mention}.")
     else:  
@@ -77,9 +76,8 @@ class Test(commands.Cog):
   @app_commands.command(name="anti_slime", description="Disallow a user to send messages in this channel.")
   async def disallow_send_messages(self, interaction: discord.Interaction, target: discord.Member, channel: discord.TextChannel = None):
     channel = channel or interaction.channel  # Default to current channel
-    channel_creator_id = int(channel.topic[channel.topic.find('<@') + 2:channel.topic.find('>')])
-
-    if channel_creator_id == discord.interactions.id and target != discord.interactions.id:
+    
+    if channel.topic == f"secretto shopu corner invaided by <@{interaction.user.id}>. Only this customer can manage this part of my shopu." and target != discord.interactions.id:
       await channel.set_permissions(target, send_messages=False)
       await interaction.response.send_message(f"Send messages for {target.mention} are now disallowed in {channel.mention}.")    
     else:
