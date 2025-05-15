@@ -97,7 +97,7 @@ class Test(commands.Cog):
   async def rename_channel(self, interaction: discord.Interaction, emoji: str, new_name: str, channel: discord.TextChannel = None):
     final_channel_name = f"{emoji}{new_name}"
     channel = channel or interaction.channel
-    if f"<@{interaction.user.id}>" in channel.topic:
+    if channel.topic == f"Designated trash zone claimed by <@{interaction.user.id}>.  This garbage belongs to them.":
       await channel.edit(name=final_channel_name)
       await interaction.followup.send(f"Successfully renamed your dumpster to **{final_channel_name}**!")  # Use followup
     else:
