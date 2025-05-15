@@ -66,37 +66,24 @@ class Test(commands.Cog):
   @app_commands.command(name="slime", description="Allow a user to send messages in this channel.")
   async def allow_send_messages(self, interaction: discord.Interaction, target: discord.Member, channel: discord.TextChannel = None):
     channel = channel or interaction.channel  # Default to current channel
-
-    # Check if the channel has a topic and if the user in topic is the command invoker
-    if channel.topic and f"secretto shopu corner invaided by <@{interaction.user.id}>. Only this customer can manage this part of my shopu." in channel.topic:
-      channel_creator_id = int(channel.topic[channel.topic.find('<@') + 2:channel.topic.find('>')])
-      
-      if interaction.user.id == channel_creator_id:
-        await channel.set_permissions(target, send_messages=True)
-
-        await interaction.response.send_message(f"Send messages for {target.mention} are now allowed in {channel.mention}.")
-      else:
-        await interaction.response.send_message("Only the channel creator can manage permissions.")
-
-    else:
-      await interaction.response.send_message("This channel was not properly created or managed using this bot.")
+    channel_creator_id = int(channel.topic[channel.topic.find('<@') + 2:channel.topic.find('>')])
+    
+    if channel_creator_id == discord.interactions.id:
+      await channel.set_permissions(target, send_messages=True)
+      await interaction.response.send_message(f"Send messages for {target.mention} are now allowed in {channel.mention}.")
+    else:  
+      await interaction.response.send_message("Only the channel creator can manage permissions.")
 
   @app_commands.command(name="anti_slime", description="Disallow a user to send messages in this channel.")
   async def disallow_send_messages(self, interaction: discord.Interaction, target: discord.Member, channel: discord.TextChannel = None):
     channel = channel or interaction.channel  # Default to current channel
+    channel_creator_id = int(channel.topic[channel.topic.find('<@') + 2:channel.topic.find('>')])
 
-    # Check if the channel has a topic and if the user in topic is the command invoker
-    if channel.topic and f"secretto shopu corner invaided by <@{interaction.user.id}>. Only this customer can manage this part of my shopu." in channel.topic:
-      channel_creator_id = int(channel.topic[channel.topic.find('<@') + 2:channel.topic.find('>')])
-      
-      if interaction.user.id == channel_creator_id:
-        await channel.set_permissions(target, send_messages=False)
-
-        await interaction.response.send_message(f"Send messages for {target.mention} are now disallowed in {channel.mention}.")
-      else:
-        await interaction.response.send_message("Only the channel creator can manage permissions.")
-
+    if channel_creator_id == discord.interactions.id and target != discord.interactions.id:
+      await channel.set_permissions(target, send_messages=False)
+      await interaction.response.send_message(f"Send messages for {target.mention} are now disallowed in {channel.mention}.")    
     else:
-      await interaction.response.send_message("This channel was not properly created or managed using this bot.")
+      await interaction.response.send_message("Only the channel creator can manage permissions.")
+
 async def setup(bot):
   await bot.add_cog(Test(bot))
