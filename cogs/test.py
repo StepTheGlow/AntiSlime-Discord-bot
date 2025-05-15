@@ -2,8 +2,7 @@ import discord
 from discord.ext import commands
 from discord import app_commands
 
-bot_role = "1371775578213978132"
-bot_role = discord.utils.get(guild.roles, id=int(bot_role))
+ground_category = "1371774633359179787"
 
 
 class Test(commands.Cog):
@@ -48,7 +47,7 @@ class Test(commands.Cog):
   async def create_channel(self, interaction: discord.Interaction, channel_name: str):
     guild = interaction.guild
     existing_channel = discord.utils.get(guild.channels, name=channel_name)
-    category = discord.utils.get(guild.categories, name="RPG Grounds")
+    category = discord.utils.get(guild.categories, id=ground_category)
 
     if existing_channel:
       await interaction.response.send_message(f'Ah, so the secretto door to **{channel_name}** is already open, huh? Heaa, no need to knock again ne! But remember, no shenanigansu, desu yo!')
@@ -59,8 +58,6 @@ class Test(commands.Cog):
       new_channel = await guild.create_text_channel(channel_name, category=category)
       await new_channel.set_permissions(interaction.user, view_channel=True, send_messages=True, create_public_threads=False, create_private_threads=False)
       await new_channel.set_permissions(guild.default_role, view_channel=True, send_messages=False, create_public_threads=False, create_private_threads=False)
-      await new_channel.set_permissions(bot_role, view_channel=False, send_messages=False, create_public_threads=False, create_private_threads=False)
-      
       
       
       # Store the channel creator's ID
