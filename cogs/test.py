@@ -82,7 +82,7 @@ class Test(commands.Cog):
   async def disallow_send_messages(self, interaction: discord.Interaction, target: discord.Member, channel: discord.TextChannel = None):
     channel = channel or interaction.channel  # Default to current channel
 
-    if target != interaction.user.id:
+    if target != interaction.user:
       if channel.topic == f"secretto shopu corner invaided by <@{interaction.user.id}>. Only this customer can manage this part of my shopu.":
         await channel.set_permissions(target, send_messages=False)
         await interaction.response.send_message(f"Send messages for {target.mention} are now disallowed in {channel.mention}.")    
