@@ -30,6 +30,7 @@ class Test(commands.Cog):
     help_embed.add_field(name="/create_channel", value="Creates a new text channel.", inline=False)
     help_embed.add_field(name="/slime", value="Allow a user to send messages in this channel.", inline=False)
     help_embed.add_field(name="/anti_slime", value="Disallow a user to send messages in this channel.", inline=False)
+    help_embed.add_field(name="/rename_dumpster", value="Rename the channel if you own it.", inline=False)
     await interaction.response.send_message(embed=help_embed)
   
   # .......................
@@ -93,43 +94,18 @@ class Test(commands.Cog):
 
   
   @app_commands.command(name="rename_dumpster", description="Rename the channel if you own it.")
-  async def rename_channel(self, interaction: discord.Interaction, channel: discord.TextChannel, new_name: str): 
-    channel = channel or interaction.channel
+  async def rename_channel(self, interaction: discord.Interaction, emoji: str, new_name: str): 
+    final_channel_name = f"{emoji}{new_name}"
+    channel = interaction.channel
     if channel and channel.topic and f"<@{interaction.user.id}>" in channel.topic:
       try:
-        await channel.edit(name=new_name)
-        await interaction.response.send_message(f"Successfully renamed your dumpster to **{new_name}**!", ephemeral=True)
+        await channel.edit(name=final_channel_name)
+        await interaction.response.send_message(f"Successfully renamed your dumpster to **{final_channel_name}**!", ephemeral=True)
       except discord.errors.Forbidden:
         await interaction.response.send_message("I don't have permission to rename this channel.", ephemeral=True)
       except discord.errors.HTTPException as e:
         await interaction.response.send_message(f"Failed to rename channel: {e}", ephemeral=True)
     else:
       await interaction.response.send_message("You do not own this dumpster, you can't rename it.", ephemeral=True)
-
-  @app_commands.command(name="claim_dumpster", description="Claim ownership of an existing channel.")
-  async def claim_channel(self, interaction: discord.Interaction, target: discord.Member, channel: discord.TextChannel = None):
-    channel = channel or interaction.channel
-
-    # Check if the channel already has an owner
-    if channel.topic and "Designated trash zone claimed by" in channel.topic:
-      await interaction.response.send_message("This dumpster already has an owner!", ephemeral=True)
-      return
-
-    guild = interaction.guild
-    owned_channel = discord.utils.find(lambda c: c.topic and f"<@{target.id}>" in c.topic, guild.text_channels)
-
-    if owned_channel:
-      await interaction.response.send_message(f'Looks like {target.mention} already claimed {owned_channel.mention} as their personal dumpster! Only one dumpster per person allowed!', ephemeral=True)
-      return
-    
-    try:
-      await channel.edit(topic=f"Designated trash zone claimed by <@{target.id}>.  This garbage belongs to them.")
-      await channel.set_permissions(target, view_channel=True, send_messages=True, create_public_threads=False, create_private_threads=False)
-      await interaction.response.send_message(f"You have claimed {channel.mention} for {target.mention} as their personal dumpster!", ephemeral=True)
-    except discord.errors.Forbidden:
-      await interaction.response.send_message("I don't have the necessary permissions to edit this channel.", ephemeral=True)
-    except Exception as e:
-      await interaction.response.send_message(f"An error occurred: {e}", ephemeral=True)
-      
 async def setup(bot):
   await bot.add_cog(Test(bot))
