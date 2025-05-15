@@ -37,9 +37,10 @@ class Test(commands.Cog):
   # .......................
   
   @app_commands.command(name="create_channel", description="Creates a new text channel")
-  async def create_channel(self, interaction: discord.Interaction, channel_name: str):
+  async def create_channel(self, interaction: discord.Interaction, emoji: str, channel_name: str):
     guild = interaction.guild
-    existing_channel = discord.utils.get(guild.channels, name=channel_name)
+    final_channel_name = f"{emoji}{channel_name}"
+    existing_channel = discord.utils.get(guild.channels, name=final_channel_name)
     category = discord.utils.get(guild.categories, name="ＴＲ－ＧＲＯＵＮＤＳ")
 
     # Check if the user already owns a channel
@@ -51,12 +52,12 @@ class Test(commands.Cog):
 
 
     if existing_channel:
-      await interaction.response.send_message(f'Looks like the dumpster **{channel_name}** is already overflowing! No more trash allowed for now, ya hear?!')
+      await interaction.response.send_message(f'Looks like the dumpster **{final_channel_name}** is already overflowing! No more trash allowed for now, ya hear?!')
     
     else:
-      print(f'Creating a new channel: {channel_name}')
+      print(f'Creating a new channel: {final_channel_name}')
       
-      new_channel = await guild.create_text_channel(channel_name, category=category)
+      new_channel = await guild.create_text_channel(final_channel_name, category=category)
       await new_channel.set_permissions(interaction.user, view_channel=True, send_messages=True, create_public_threads=False, create_private_threads=False)
       await new_channel.set_permissions(guild.default_role, view_channel=True, send_messages=False, create_public_threads=False, create_private_threads=False)
       
@@ -64,7 +65,7 @@ class Test(commands.Cog):
       # Store the channel creator's ID
       await new_channel.edit(topic=f"Designated trash zone claimed by <@{interaction.user.id}>.  This garbage belongs to them.")
       
-      await interaction.response.send_message(f'You claimed **{channel_name}** as your personal dumpster! Enjoy the stench!')
+      await interaction.response.send_message(f'You claimed **{final_channel_name}** as your personal dumpster! Enjoy the stench!')
 
   @app_commands.command(name="slime", description="Allow a user to send messages in this channel.")
   async def allow_send_messages(self, interaction: discord.Interaction, target: discord.Member, channel: discord.TextChannel = None):
