@@ -60,7 +60,7 @@ class Test(commands.Cog):
       await new_channel.set_permissions(interaction.user, view_channel=True, send_messages=True, create_public_threads=False, create_private_threads=False)
       await new_channel.set_permissions(guild.default_role, view_channel=True, send_messages=False, create_public_threads=False, create_private_threads=False)
       await new_channel.set_permissions(bot_role, view_channel=False, send_messages=False, create_public_threads=False, create_private_threads=False)
-
+      
       
       
       # Store the channel creator's ID
@@ -81,12 +81,15 @@ class Test(commands.Cog):
   @app_commands.command(name="anti_slime", description="Disallow a user to send messages in this channel.")
   async def disallow_send_messages(self, interaction: discord.Interaction, target: discord.Member, channel: discord.TextChannel = None):
     channel = channel or interaction.channel  # Default to current channel
-    
-    if channel.topic == f"secretto shopu corner invaided by <@{interaction.user.id}>. Only this customer can manage this part of my shopu." and target != interaction.user.id:
-      await channel.set_permissions(target, send_messages=False)
-      await interaction.response.send_message(f"Send messages for {target.mention} are now disallowed in {channel.mention}.")    
-    else:
-      await interaction.response.send_message("Only the channel creator can manage permissions.")
 
+    if target != interaction.user.id:
+      if channel.topic == f"secretto shopu corner invaided by <@{interaction.user.id}>. Only this customer can manage this part of my shopu.":
+        await channel.set_permissions(target, send_messages=False)
+        await interaction.response.send_message(f"Send messages for {target.mention} are now disallowed in {channel.mention}.")    
+      else:
+        await interaction.response.send_message("Only the channel creator can manage permissions.")
+    else:
+      await interaction.response.send_message("You can't disallow yourself from sending messages.")
+      
 async def setup(bot):
   await bot.add_cog(Test(bot))
