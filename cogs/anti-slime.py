@@ -94,9 +94,9 @@ class Test(commands.Cog):
 
   
   @app_commands.command(name="rename_dumpster", description="Rename the channel if you own it.")
-  async def rename_channel(self, interaction: discord.Interaction, emoji: str, new_name: str): 
+  async def rename_channel(self, interaction: discord.Interaction, emoji: str, new_name: str, channel: discord.TextChannel = None): 
     final_channel_name = f"{emoji}{new_name}"
-    channel = interaction.channel
+    channel = channel or interaction.channel 
     if channel and channel.topic and f"<@{interaction.user.id}>" in channel.topic:
       try:
         await channel.edit(name=final_channel_name)
