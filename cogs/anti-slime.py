@@ -42,6 +42,14 @@ class Test(commands.Cog):
     existing_channel = discord.utils.get(guild.channels, name=channel_name)
     category = discord.utils.get(guild.categories, name="ＴＲ－ＧＲＯＵＮＤＳ")
 
+    # Check if the user already owns a channel
+    owned_channel = discord.utils.find(lambda c: c.topic and f"<@{interaction.user.id}>" in c.topic, guild.text_channels)
+
+    if owned_channel:
+      await interaction.response.send_message(f'Looks like you already claimed {owned_channel.mention} as your personal dumpster! Only one dumpster per person allowed!')
+      return
+
+
     if existing_channel:
       await interaction.response.send_message(f'Looks like the dumpster **{channel_name}** is already overflowing! No more trash allowed for now, ya hear?!')
     
@@ -67,7 +75,6 @@ class Test(commands.Cog):
       await interaction.response.send_message(f"Now accepting trash from {target.mention} in {channel.mention}.")
     else:  
       await interaction.response.send_message("Only the garbage owner can manage permissions.")
-
   @app_commands.command(name="anti_slime", description="Disallow a user to send messages in this channel.")
   async def disallow_send_messages(self, interaction: discord.Interaction, target: discord.Member, channel: discord.TextChannel = None):
     channel = channel or interaction.channel  # Default to current channel
