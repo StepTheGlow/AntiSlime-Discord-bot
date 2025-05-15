@@ -97,14 +97,9 @@ class Test(commands.Cog):
   async def rename_channel(self, interaction: discord.Interaction, emoji: str, new_name: str, channel: discord.TextChannel = None):
     final_channel_name = f"{emoji}{new_name}"
     channel = channel or interaction.channel
-    if channel and channel.topic and f"<@{interaction.user.id}>" in channel.topic:
-      try:
-        await channel.edit(name=final_channel_name)
-        await interaction.followup.send(f"Successfully renamed your dumpster to **{final_channel_name}**!")  # Use followup
-      except discord.errors.Forbidden:
-        await interaction.followup.send("I don't have permission to rename this channel.", ephemeral=True)  # Use followup
-      except discord.errors.HTTPException as e:
-        await interaction.followup.send(f"Failed to rename channel: {e}", ephemeral=True)  # Use followup
+    if f"<@{interaction.user.id}>" in channel.topic:
+      await channel.edit(name=final_channel_name)
+      await interaction.followup.send(f"Successfully renamed your dumpster to **{final_channel_name}**!")  # Use followup
     else:
       await interaction.followup.send("You do not own this dumpster, you can't rename it.", ephemeral=True)  # Use followup
 
