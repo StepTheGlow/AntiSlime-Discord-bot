@@ -94,18 +94,21 @@ class Test(commands.Cog):
 
   
   @app_commands.command(name="rename_dumpster", description="Rename the channel if you own it.")
-  async def rename_channel(self, interaction: discord.Interaction, emoji: str, new_name: str, channel: discord.TextChannel = None): 
+  async def rename_channel(self, interaction: discord.Interaction, emoji: str, new_name: str, channel: discord.TextChannel = None):
+    await interaction.response.defer()  # Defer the interaction
+
     final_channel_name = f"{emoji}{new_name}"
-    channel = channel or interaction.channel 
+    channel = channel or interaction.channel
     if channel and channel.topic and f"<@{interaction.user.id}>" in channel.topic:
       try:
         await channel.edit(name=final_channel_name)
-        await interaction.response.send_message(f"Successfully renamed your dumpster to **{final_channel_name}**!", ephemeral=True)
+        await interaction.followup.send(f"Successfully renamed your dumpster to **{final_channel_name}**!")  # Use followup
       except discord.errors.Forbidden:
-        await interaction.response.send_message("I don't have permission to rename this channel.", ephemeral=True)
+        await interaction.followup.send("I don't have permission to rename this channel.", ephemeral=True)  # Use followup
       except discord.errors.HTTPException as e:
-        await interaction.response.send_message(f"Failed to rename channel: {e}", ephemeral=True)
+        await interaction.followup.send(f"Failed to rename channel: {e}", ephemeral=True)  # Use followup
     else:
-      await interaction.response.send_message("You do not own this dumpster, you can't rename it.", ephemeral=True)
+      await interaction.followup.send("You do not own this dumpster, you can't rename it.", ephemeral=True)  # Use followup
+
 async def setup(bot):
   await bot.add_cog(Test(bot))
