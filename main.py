@@ -13,13 +13,10 @@ bot = commands.Bot(command_prefix="!", intents=intents)
 
 
 bot_statuses = cycle([
-  "Want some candy? I promise it’s not laced with anything... this time",
-  
-  "Ah, advice? I charge a fee for that. How about a nice hat instead?", "Prepare yourself! I’m about to unveil my master plan... or maybe just a really good snack recipe.",
-  
-  "Welcome to my shop! We have everything from soul candy to soul-saving advice. Just don’t ask about the ‘mystery’ section!",
-  
-  "Introducing the latest in soul-reaping technology! Guaranteed to be 50% more stylish than the last model!"])
+    "Defending against an army of slime",
+    "King Slime is too strong!",
+    "Keeps all slimes away except king slime"
+])
 
 @tasks.loop(seconds=10)
 async def change_status():

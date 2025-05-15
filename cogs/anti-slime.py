@@ -22,22 +22,16 @@ class Test(commands.Cog):
   async def ping(self, interaction: discord.Interaction):
     ping_embed = discord.Embed(title="Ping!", description=f"Ping: {round(self.bot.latency * 1000)}ms", color=discord.Color.green())
     await interaction.response.send_message(embed=ping_embed)
-
-  @app_commands.command(name="yokoso", description="Yokoso stranger")
-  async def yokoso(self, interaction: discord.Interaction):
-    await interaction.response.send_message(f"yokoso, {interaction.user.mention}")
-
-  @app_commands.command(name="yahallo", description="Yahallo cool guy")
-  async def yahallo_command(self, interaction: discord.Interaction):
-    await interaction.response.send_message(f"yahallo {interaction.user.mention}")
-
   
-  @app_commands.command(name="ohayo", description="Greets user with Ohayo")
-  async def ohayo(self, interaction: discord.Interaction):
-    embedded_msg = discord.Embed(title="Ohayo", description="Ohayo Espada", color=discord.Color.green())
-    embedded_msg.set_thumbnail(url='https://i.pinimg.com/originals/a0/9e/ac/a09eacbb0012139bfdb0b75d6eb951b2.gif')
-    await interaction.response.send_message(embed=embedded_msg)
-
+  @app_commands.command(name="help", description="Shows available commands")
+  async def help(self, interaction: discord.Interaction):
+    help_embed = discord.Embed(title="Command List", description="Displays a list of available commands.", color=discord.Color(0xff9776))
+    help_embed.add_field(name="/ping", value="Returns the bot's latency.", inline=False)
+    help_embed.add_field(name="/create_channel", value="Creates a new text channel.", inline=False)
+    help_embed.add_field(name="/slime", value="Allow a user to send messages in this channel.", inline=False)
+    help_embed.add_field(name="/anti_slime", value="Disallow a user to send messages in this channel.", inline=False)
+    await interaction.response.send_message(embed=help_embed)
+  
   # .......................
   # create channel commands
   # .......................
@@ -46,10 +40,10 @@ class Test(commands.Cog):
   async def create_channel(self, interaction: discord.Interaction, channel_name: str):
     guild = interaction.guild
     existing_channel = discord.utils.get(guild.channels, name=channel_name)
-    category = discord.utils.get(guild.categories, name="RPG Grounds")
+    category = discord.utils.get(guild.categories, name="ＴＲ－ＧＲＯＵＮＤＳ")
 
     if existing_channel:
-      await interaction.response.send_message(f'Ah, so the secretto door to **{channel_name}** is already open, huh? Heaa, no need to knock again ne! But remember, no shenanigansu, desu yo!')
+      await interaction.response.send_message(f'Looks like the dumpster **{channel_name}** is already overflowing! No more trash allowed for now, ya hear?!')
     
     else:
       print(f'Creating a new channel: {channel_name}')
@@ -60,32 +54,32 @@ class Test(commands.Cog):
       
       
       # Store the channel creator's ID
-      await new_channel.edit(topic=f"secretto shopu corner invaided by <@{interaction.user.id}>. Only this customer can manage this part of my shopu.")
+      await new_channel.edit(topic=f"Designated trash zone claimed by <@{interaction.user.id}>.  This garbage belongs to them.")
       
-      await interaction.response.send_message(f'You seemu to have invaided my **{channel_name}** secretto shopu corner, ne? Heaa, take a seeeto—but watch out for the trapsu, desu yo')
+      await interaction.response.send_message(f'You claimed **{channel_name}** as your personal dumpster! Enjoy the stench!')
 
   @app_commands.command(name="slime", description="Allow a user to send messages in this channel.")
   async def allow_send_messages(self, interaction: discord.Interaction, target: discord.Member, channel: discord.TextChannel = None):
     channel = channel or interaction.channel  # Default to current channel
     
-    if channel.topic == f"secretto shopu corner invaided by <@{interaction.user.id}>. Only this customer can manage this part of my shopu.":
+    if channel.topic == f"Designated trash zone claimed by <@{interaction.user.id}>.  This garbage belongs to them.":
       await channel.set_permissions(target, send_messages=True)
-      await interaction.response.send_message(f"Send messages for {target.mention} are now allowed in {channel.mention}.")
+      await interaction.response.send_message(f"Now accepting trash from {target.mention} in {channel.mention}.")
     else:  
-      await interaction.response.send_message("Only the channel creator can manage permissions.")
+      await interaction.response.send_message("Only the garbage owner can manage permissions.")
 
   @app_commands.command(name="anti_slime", description="Disallow a user to send messages in this channel.")
   async def disallow_send_messages(self, interaction: discord.Interaction, target: discord.Member, channel: discord.TextChannel = None):
     channel = channel or interaction.channel  # Default to current channel
 
     if target != interaction.user:
-      if channel.topic == f"secretto shopu corner invaided by <@{interaction.user.id}>. Only this customer can manage this part of my shopu.":
+      if channel.topic == f"Designated trash zone claimed by <@{interaction.user.id}>.  This garbage belongs to them.":
         await channel.set_permissions(target, send_messages=False)
-        await interaction.response.send_message(f"Send messages for {target.mention} are now disallowed in {channel.mention}.")    
+        await interaction.response.send_message(f"No more trash from {target.mention} allowed in {channel.mention}.")    
       else:
-        await interaction.response.send_message("Only the channel creator can manage permissions.")
+        await interaction.response.send_message("Only the garbage owner can manage permissions.")
     else:
-      await interaction.response.send_message("You can't disallow yourself from sending messages.")
+      await interaction.response.send_message("You can't ban yourself from your own trash.")
       
 async def setup(bot):
   await bot.add_cog(Test(bot))
