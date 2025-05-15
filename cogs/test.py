@@ -2,7 +2,6 @@ import discord
 from discord.ext import commands
 from discord import app_commands
 
-ground_category = "1371774633359179787"
 
 
 class Test(commands.Cog):
@@ -47,7 +46,7 @@ class Test(commands.Cog):
   async def create_channel(self, interaction: discord.Interaction, channel_name: str):
     guild = interaction.guild
     existing_channel = discord.utils.get(guild.channels, name=channel_name)
-    category = discord.utils.get(guild.categories, id=ground_category)
+    category = discord.utils.get(guild.categories, name="RPG Grounds")
 
     if existing_channel:
       await interaction.response.send_message(f'Ah, so the secretto door to **{channel_name}** is already open, huh? Heaa, no need to knock again ne! But remember, no shenanigansu, desu yo!')
