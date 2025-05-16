@@ -59,7 +59,7 @@ class Test(commands.Cog):
       print(f'Creating a new channel: {final_channel_name}')
       
       new_channel = await guild.create_text_channel(final_channel_name, category=category)
-      await new_channel.set_permissions(interaction.user, view_channel=True, send_messages=True, create_public_threads=False, create_private_threads=False)
+      await new_channel.set_permissions(interaction.user, view_channel=True, send_messages=True, create_public_threads=False, create_private_threads=False, manage_messages=True)
       await new_channel.set_permissions(guild.default_role, view_channel=True, send_messages=False, create_public_threads=False, create_private_threads=False)
       
       
