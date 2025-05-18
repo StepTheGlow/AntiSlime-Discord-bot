@@ -7,6 +7,7 @@ from itertools import cycle
 import web
 
 load_dotenv()
+
 intents = discord.Intents.default()
 intents.message_content = True
 bot = commands.Bot(command_prefix="!", intents=intents)
@@ -26,9 +27,6 @@ async def change_status():
 async def on_ready():
   change_status.start()
   
-
-
-
 
 async def load():
   for filename in os.listdir('./cogs'):
