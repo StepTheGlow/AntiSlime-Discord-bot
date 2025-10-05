@@ -4,20 +4,21 @@ from dotenv import load_dotenv
 import os
 import asyncio
 from itertools import cycle
-import web
 
 load_dotenv()
-
 intents = discord.Intents.default()
 intents.message_content = True
 bot = commands.Bot(command_prefix="!", intents=intents)
 
 
 bot_statuses = cycle([
-    "Defending against an army of slime",
-    "King Slime is too strong!",
-    "Keeps all slimes away except king slime"
-])
+  "Want some candy? I promise it’s not laced with anything... this time",
+  
+  "Ah, advice? I charge a fee for that. How about a nice hat instead?", "Prepare yourself! I’m about to unveil my master plan... or maybe just a really good snack recipe.",
+  
+  "Welcome to my shop! We have everything from soul candy to soul-saving advice. Just don’t ask about the ‘mystery’ section!",
+  
+  "Introducing the latest in soul-reaping technology! Guaranteed to be 50% more stylish than the last model!"])
 
 @tasks.loop(seconds=10)
 async def change_status():
@@ -26,7 +27,17 @@ async def change_status():
 @bot.event
 async def on_ready():
   change_status.start()
-  
+  try:
+    synced = await bot.tree.sync()
+    print(f"Synced {len(synced)} command(s)")
+  except Exception as e:
+    print("Error syncing commands:", e)
+
+@bot.tree.command(name="yahallo", description="yahallo cool guy")
+async def yahallo(interaction: discord.Interaction):
+  latency = round(bot.latency * 1000)
+  await interaction.response.send_message(f"yahallo {interaction.user.mention}")
+  await interaction.response.send_message(f"Pong! Latency: {latency}ms")
 
 async def load():
   for filename in os.listdir('./cogs'):
@@ -38,5 +49,4 @@ async def main():
         await load()
         await bot.start(os.getenv('TOKEN'))
 
-web.keep_alive()
 asyncio.run(main())
