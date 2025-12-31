@@ -16,9 +16,10 @@ bot_statuses = cycle([
   
   "Ah, advice? I charge a fee for that. How about a nice hat instead?", "Prepare yourself! I’m about to unveil my master plan... or maybe just a really good snack recipe.",
   
-  "Welcome to my shop! We have everything from soul candy to soul-saving advice. Just don’t ask about the ‘mystery’ section!",
+  "Welcome to my shop! We have everything from slime candy to food-saving advice. Just don’t ask about the ‘mystery’ section!",
   
-  "Introducing the latest in soul-reaping technology! Guaranteed to be 50% more stylish than the last model!"])
+  "Introducing the latest in-slime technology! Guaranteed to be 50% more stylish than the last model!"]) 
+# slime candy is soul candy food-saving is soul saving  in-slime is in soul-reaping
 
 @tasks.loop(seconds=10)
 async def change_status():
