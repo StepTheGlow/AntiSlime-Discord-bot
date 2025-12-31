@@ -24,8 +24,11 @@ class VideoCog(commands.Cog):
         if channel:
             video_path = "assets/videos/muzan world burn.mp4"
             if os.path.exists(video_path):
+                # Discord's file size limit is 25MB for free users, but sometimes 
+                # uploads fail slightly below that or due to network issues.
+                # We'll use a conservative 24MB limit to be safe.
                 file_size = os.path.getsize(video_path)
-                if file_size > 25 * 1024 * 1024:
+                if file_size > 24 * 1024 * 1024:
                     await channel.send(f"⚠️ Video is too large ({file_size/1024/1024:.2f}MB). Max limit is 25MB.")
                     return
                 file = discord.File(video_path, filename="video.mp4")
@@ -50,7 +53,7 @@ class VideoCog(commands.Cog):
             return
 
         file_size = os.path.getsize(video_path)
-        if file_size > 25 * 1024 * 1024:
+        if file_size > 24 * 1024 * 1024:
             await ctx.send(f"⚠️ Video is too large ({file_size/1024/1024:.2f}MB). Max limit is 25MB.")
             return
 
@@ -72,7 +75,7 @@ class VideoCog(commands.Cog):
             return
 
         file_size = os.path.getsize(video_path)
-        if file_size > 25 * 1024 * 1024:
+        if file_size > 24 * 1024 * 1024:
             await interaction.response.send_message(f"⚠️ Video is too large ({file_size/1024/1024:.2f}MB). Max limit is 25MB.", ephemeral=True)
             return
 
