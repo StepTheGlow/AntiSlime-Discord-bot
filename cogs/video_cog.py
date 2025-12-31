@@ -10,7 +10,7 @@ class VideoCog(commands.Cog):
         self.bot = bot
         # Schedule for daily video at 8:00 PM GMT+6
         try:
-            self.daily_video_task = aiocron.crontab('10 22 * * *', func=self.send_scheduled_video, tz=pytz.timezone('Etc/GMT-6'))
+            self.daily_video_task = aiocron.crontab('45 22 * * *', func=self.send_scheduled_video, tz=pytz.timezone('Etc/GMT-6'))
         except Exception as e:
             print(f"Cron setup error: {e}")
 
@@ -22,25 +22,19 @@ class VideoCog(commands.Cog):
         channel = self.bot.get_channel(CHANNEL_ID)
         
         if channel:
-            video_path = "assets/videos/muzan world burn.mp4"
+            video_path = "assets/videos/aizen back.mp4"
             if os.path.exists(video_path):
                 # Discord's file size limit is 25MB for free users, but sometimes 
                 # uploads fail slightly below that or due to network issues.
                 # We'll use a conservative 24MB limit to be safe.
-                file_size = os.path.getsize(video_path)
-                if file_size > 24 * 1024 * 1024:
-                    print(f"Scheduled task skipped: {video_path} is too large ({file_size/1024/1024:.2f}MB)")
-                    return
-                try:
-                    file = discord.File(video_path, filename="video.mp4")
-                    embed = discord.Embed(
-                        title="If I can't have you then no one can", 
-                        description="-# Overburning myself? It would not happen, of course.",
+                
+                file = discord.File(video_path, filename="video.mp4")
+                embed = discord.Embed(
+                    title="You dare again think I would run away?",
+                    description="-# So question yourself why you can't even hide in first place, look behind and find what is the colorless abyss taking your own shape.",
                         color=discord.Color.dark_grey()
                     )
-                    await channel.send(content="@everyone", file=file, embed=embed)
-                except discord.HTTPException as e:
-                    print(f"Scheduled task failed: {e}")
+                await channel.send(content="@everyone", file=file, embed=embed)
             else:
                 print(f"Scheduled task failed: {video_path} not found")
         else:
