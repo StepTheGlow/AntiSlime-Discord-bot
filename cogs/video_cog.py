@@ -25,7 +25,7 @@ class VideoCog(commands.Cog):
                 file = discord.File(video_path, filename="video.mp4")
                 embed = discord.Embed(
                     title="Something stirs within you, compelling your heart to race relentlessly.", 
-                    description="-# One such as I, whose presence have been long awaited, has finally returned.",
+                    description="-# One such as I, whose presence has been long awaited, has finally returned.",
                     color=discord.Color.dark_grey()
                 )
                 await channel.send(content="@everyone", file=file, embed=embed)
@@ -46,7 +46,7 @@ class VideoCog(commands.Cog):
         file = discord.File(video_path, filename="video.mp4")
         embed = discord.Embed(
             title="Something stirs within you, compelling your heart to race relentlessly.", 
-            description="-# One such as I, whose presence have been long awaited, has finally returned.",
+            description="-# One such as I, whose presence has been long awaited, has finally returned.",
             color=discord.Color.dark_grey()
         )
         await ctx.send(content="@everyone", file=file, embed=embed)
@@ -66,7 +66,7 @@ class VideoCog(commands.Cog):
         file = discord.File(video_path, filename="video.mp4")
         embed = discord.Embed(
             title="Something stirs within you, compelling your heart to race relentlessly.", 
-            description="-# One such as I, whose presence have been long awaited, has finally returned.",
+            description="-# One such as I, whose presence has been long awaited, has finally returned.",
             color=discord.Color.dark_grey()
         )
         await interaction.followup.send(content="@everyone", file=file, embed=embed)
