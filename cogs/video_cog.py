@@ -11,21 +11,22 @@ class VideoCog(commands.Cog):
         # Schedule for 8 PM (20:00) in GMT+6
         # Cron format: 'minute hour day month day_of_week'
         # '0 20 * * *' means 8:00 PM every day
-        self.daily_video_task = aiocron.crontab('0 20 * * *', func=self.send_scheduled_video, tz=pytz.timezone('Etc/GMT-6'))
+        self.daily_video_task = aiocron.crontab('14 20 * * *', func=self.send_scheduled_video, tz=pytz.timezone('Etc/GMT-6'))
 
     async def send_scheduled_video(self):
         """Internal function to send the video to a specific channel"""
         # Replace with your actual channel ID where you want the video sent
-        CHANNEL_ID = 1336364995721564160  # YOU MUST UPDATE THIS
+        CHANNEL_ID = 1455926797882490992 #1336364995721564160  # YOU MUST UPDATE THIS
         channel = self.bot.get_channel(CHANNEL_ID)
         
         if channel:
-            video_path = "assets/videos/your_video.mp4"
+            video_path = "assets/videos/SLAVA FUNK! (SLOWED) - AIZEN.mp4"
             if os.path.exists(video_path):
                 file = discord.File(video_path, filename="video.mp4")
                 embed = discord.Embed(
                     title="Something stirs within you, compelling your heart to race relentlessly.", 
-                    description=f"{datetime.now(pytz.timezone('Etc/GMT-6')).strftime('%Y-%m-%d %H:%M')}\n\n-# @everyone, one such as I, whose presence have been long awaited, has finally returned."
+                    description="-# @everyone, one such as I, whose presence have been long awaited, has finally returned.",
+                    color=discord.Color.dark_grey()
                 )
                 await channel.send(content="@everyone", file=file, embed=embed)
             else:
@@ -45,7 +46,8 @@ class VideoCog(commands.Cog):
         file = discord.File(video_path, filename="video.mp4")
         embed = discord.Embed(
             title="Custom Heading Here", 
-            description="Playing uploaded video\n\n-# @everyone Small bottom text here"
+            description="-# @everyone Small bottom text here",
+            color=discord.Color.dark_grey()
         )
         
         # Note: Discord doesn't support direct video playback inside an embed "video" field via local files.
