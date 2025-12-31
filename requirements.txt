@@ -24,3 +24,5 @@ yarl==1.20.0
 flask
 aiocron
 pytz
+aiocron
+pytz

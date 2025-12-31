@@ -31,6 +31,8 @@ async def on_ready():
   try:
     synced = await bot.tree.sync()
     print(f"Synced {len(synced)} command(s)")
+    for cmd in synced:
+        print(f"Synced command: {cmd.name}")
   except Exception as e:
     print("Error syncing commands:", e)
 
@@ -42,8 +44,12 @@ async def yahallo(interaction: discord.Interaction):
 
 async def load():
   for filename in os.listdir('./cogs'):
-    if filename.endswith('.py'):
-      await bot.load_extension(f'cogs.{filename[:-3]}')
+    if filename.endswith('.py') and not filename.endswith('.disabled'):
+      try:
+        await bot.load_extension(f'cogs.{filename[:-3]}')
+        print(f"Loaded extension: {filename}")
+      except Exception as e:
+        print(f"Failed to load extension {filename}: {e}")
 
 async def main():
     async with bot:
