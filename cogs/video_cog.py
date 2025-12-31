@@ -10,7 +10,7 @@ class VideoCog(commands.Cog):
         self.bot = bot
         # Schedule for daily video at 8:00 PM GMT+6
         try:
-            self.daily_video_task = aiocron.crontab('0 22 * * *', func=self.send_scheduled_video, tz=pytz.timezone('Etc/GMT-6'))
+            self.daily_video_task = aiocron.crontab('5 22 * * *', func=self.send_scheduled_video, tz=pytz.timezone('Etc/GMT-6'))
         except Exception as e:
             print(f"Cron setup error: {e}")
 
@@ -24,6 +24,10 @@ class VideoCog(commands.Cog):
         if channel:
             video_path = "assets/videos/muzan world burn.mp4"
             if os.path.exists(video_path):
+                file_size = os.path.getsize(video_path)
+                if file_size > 25 * 1024 * 1024:
+                    await channel.send(f"⚠️ Video is too large ({file_size/1024/1024:.2f}MB). Max limit is 25MB.")
+                    return
                 file = discord.File(video_path, filename="video.mp4")
                 embed = discord.Embed(
                     title="If I can't have you then no one can", 
@@ -45,6 +49,11 @@ class VideoCog(commands.Cog):
             await ctx.send(f"Video file not found at {video_path}!")
             return
 
+        file_size = os.path.getsize(video_path)
+        if file_size > 25 * 1024 * 1024:
+            await ctx.send(f"⚠️ Video is too large ({file_size/1024/1024:.2f}MB). Max limit is 25MB.")
+            return
+
         file = discord.File(video_path, filename="video.mp4")
         embed = discord.Embed(
             title="Something stirs within you, compelling your heart to race relentlessly.", 
@@ -60,6 +69,11 @@ class VideoCog(commands.Cog):
         
         if not os.path.exists(video_path):
             await interaction.response.send_message(f"Video file not found at {video_path}!", ephemeral=True)
+            return
+
+        file_size = os.path.getsize(video_path)
+        if file_size > 25 * 1024 * 1024:
+            await interaction.response.send_message(f"⚠️ Video is too large ({file_size/1024/1024:.2f}MB). Max limit is 25MB.", ephemeral=True)
             return
 
         # Defer because uploading might take a moment
