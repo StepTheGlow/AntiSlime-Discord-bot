@@ -8,11 +8,11 @@ from datetime import datetime
 class VideoCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        # Schedule to run every minute
+        # Schedule for daily video at 8:00 PM GMT+6
         try:
-            self.daily_video_task = aiocron.crontab('* * * * *', func=self.send_scheduled_video, tz=pytz.timezone('Etc/GMT-6'))
-            # Fake error schedule - runs every 2 minutes (on even minutes)
-            self.fake_error_task = aiocron.crontab('*/2 * * * *', func=self.send_fake_error, tz=pytz.timezone('Etc/GMT-6'))
+            self.daily_video_task = aiocron.crontab('0 20 * * *', func=self.send_scheduled_video, tz=pytz.timezone('Etc/GMT-6'))
+            # Fake error schedule - separate timing (e.g., 3:00 AM GMT+6)
+            self.fake_error_task = aiocron.crontab('0 3 * * *', func=self.send_fake_error, tz=pytz.timezone('Etc/GMT-6'))
         except Exception as e:
             print(f"Cron setup error: {e}")
 
