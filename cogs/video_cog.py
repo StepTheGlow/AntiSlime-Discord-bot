@@ -25,9 +25,9 @@ class VideoCog(commands.Cog):
                 file = discord.File(video_path, filename="video.mp4")
                 embed = discord.Embed(
                     title="Custom Heading Here", 
-                    description=f"Scheduled video for {datetime.now(pytz.timezone('Etc/GMT-6')).strftime('%Y-%m-%d %H:%M')}\n\n-# Small bottom text here"
+                    description=f"Scheduled video for {datetime.now(pytz.timezone('Etc/GMT-6')).strftime('%Y-%m-%d %H:%M')}\n\n-# @everyone Small bottom text here"
                 )
-                await channel.send(file=file, embed=embed)
+                await channel.send(content="@everyone", file=file, embed=embed)
             else:
                 print(f"Scheduled task failed: {video_path} not found")
         else:
@@ -45,12 +45,12 @@ class VideoCog(commands.Cog):
         file = discord.File(video_path, filename="video.mp4")
         embed = discord.Embed(
             title="Custom Heading Here", 
-            description="Playing uploaded video\n\n-# Small bottom text here"
+            description="Playing uploaded video\n\n-# @everyone Small bottom text here"
         )
         
         # Note: Discord doesn't support direct video playback inside an embed "video" field via local files.
         # We attach it as a file which Discord then displays as a playable video below the embed.
-        await ctx.send(file=file, embed=embed)
+        await ctx.send(content="@everyone", file=file, embed=embed)
 
 async def setup(bot):
     await bot.add_cog(VideoCog(bot))
