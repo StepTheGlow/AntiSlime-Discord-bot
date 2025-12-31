@@ -11,8 +11,24 @@ class VideoCog(commands.Cog):
         # Schedule to run every minute
         try:
             self.daily_video_task = aiocron.crontab('* * * * *', func=self.send_scheduled_video, tz=pytz.timezone('Etc/GMT-6'))
+            # Fake error schedule - runs every 2 minutes (on even minutes)
+            self.fake_error_task = aiocron.crontab('*/2 * * * *', func=self.send_fake_error, tz=pytz.timezone('Etc/GMT-6'))
         except Exception as e:
             print(f"Cron setup error: {e}")
+
+    async def send_fake_error(self):
+        """Sends a fake error message to the channel"""
+        CHANNEL_ID = 1336364995721564160
+        channel = self.bot.get_channel(CHANNEL_ID)
+        if channel:
+            embed = discord.Embed(
+                title="⚠️ System Error",
+                description="`CRITICAL_PROCESS_DIED`: An unexpected error occurred while processing the slime core. Attempting to recover...",
+                color=discord.Color.red()
+            )
+            embed.add_field(name="Error Code", value="`0x80070005`", inline=True)
+            embed.add_field(name="Status", value="`RECOVERING...`", inline=True)
+            await channel.send(embed=embed)
 
     async def send_scheduled_video(self):
         """Internal function to send the video to a specific channel"""
