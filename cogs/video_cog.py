@@ -8,10 +8,11 @@ from datetime import datetime
 class VideoCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        # Schedule for 8 PM (20:00) in GMT+6
-        # Cron format: 'minute hour day month day_of_week'
-        # '0 20 * * *' means 8:00 PM every day
-        self.daily_video_task = aiocron.crontab('46 20 * * *', func=self.send_scheduled_video, tz=pytz.timezone('Etc/GMT-6'))
+        # Schedule to run every minute
+        try:
+            self.daily_video_task = aiocron.crontab('* * * * *', func=self.send_scheduled_video, tz=pytz.timezone('Etc/GMT-6'))
+        except Exception as e:
+            print(f"Cron setup error: {e}")
 
     async def send_scheduled_video(self):
         """Internal function to send the video to a specific channel"""
