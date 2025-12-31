@@ -29,7 +29,7 @@ class VideoCog(commands.Cog):
                 # We'll use a conservative 24MB limit to be safe.
                 file_size = os.path.getsize(video_path)
                 if file_size > 24 * 1024 * 1024:
-                    await channel.send(f"⚠️ Video is too large ({file_size/1024/1024:.2f}MB). Max limit is 25MB.")
+                    print(f"Scheduled task skipped: {video_path} is too large ({file_size/1024/1024:.2f}MB)")
                     return
                 try:
                     file = discord.File(video_path, filename="video.mp4")
@@ -40,10 +40,7 @@ class VideoCog(commands.Cog):
                     )
                     await channel.send(content="@everyone", file=file, embed=embed)
                 except discord.HTTPException as e:
-                    if e.status == 413:
-                        await channel.send(f"⚠️ Failed to send scheduled video: File size limit reached (Payload Too Large).")
-                    else:
-                        await channel.send(f"⚠️ An error occurred while sending the scheduled video: {e}")
+                    print(f"Scheduled task failed: {e}")
             else:
                 print(f"Scheduled task failed: {video_path} not found")
         else:
