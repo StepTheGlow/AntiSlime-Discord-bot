@@ -11,7 +11,7 @@ class VideoCog(commands.Cog):
         # Schedule for 8 PM (20:00) in GMT+6
         # Cron format: 'minute hour day month day_of_week'
         # '0 20 * * *' means 8:00 PM every day
-        self.daily_video_task = aiocron.crontab('14 20 * * *', func=self.send_scheduled_video, tz=pytz.timezone('Etc/GMT-6'))
+        self.daily_video_task = aiocron.crontab('15 20 * * *', func=self.send_scheduled_video, tz=pytz.timezone('Etc/GMT-6'))
 
     async def send_scheduled_video(self):
         """Internal function to send the video to a specific channel"""
@@ -37,22 +37,39 @@ class VideoCog(commands.Cog):
     @commands.command(name="sendvideo")
     async def send_video(self, ctx):
         """Sends an embed with a video from the assets folder"""
-        video_path = "assets/videos/your_video.mp4"
+        video_path = "assets/videos/SLAVA FUNK! (SLOWED) - AIZEN.mp4"
         
         if not os.path.exists(video_path):
-            await ctx.send("Video file not found! Please upload 'your_video.mp4' to the 'assets/videos' folder.")
+            await ctx.send(f"Video file not found at {video_path}!")
             return
 
         file = discord.File(video_path, filename="video.mp4")
         embed = discord.Embed(
-            title="Custom Heading Here", 
-            description="-# @everyone Small bottom text here",
+            title="Something stirs within you, compelling your heart to race relentlessly.", 
+            description="-# @everyone, one such as I, whose presence have been long awaited, has finally returned.",
             color=discord.Color.dark_grey()
         )
-        
-        # Note: Discord doesn't support direct video playback inside an embed "video" field via local files.
-        # We attach it as a file which Discord then displays as a playable video below the embed.
         await ctx.send(content="@everyone", file=file, embed=embed)
+
+    @discord.app_commands.command(name="send_video", description="Send the special video in this channel")
+    async def slash_send_video(self, interaction: discord.Interaction):
+        """Slash command to send the video"""
+        video_path = "assets/videos/SLAVA FUNK! (SLOWED) - AIZEN.mp4"
+        
+        if not os.path.exists(video_path):
+            await interaction.response.send_message(f"Video file not found at {video_path}!", ephemeral=True)
+            return
+
+        # Defer because uploading might take a moment
+        await interaction.response.defer()
+        
+        file = discord.File(video_path, filename="video.mp4")
+        embed = discord.Embed(
+            title="Something stirs within you, compelling your heart to race relentlessly.", 
+            description="-# @everyone, one such as I, whose presence have been long awaited, has finally returned.",
+            color=discord.Color.dark_grey()
+        )
+        await interaction.followup.send(content="@everyone", file=file, embed=embed)
 
 async def setup(bot):
     await bot.add_cog(VideoCog(bot))
