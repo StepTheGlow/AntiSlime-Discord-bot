@@ -54,6 +54,10 @@ async def load():
 async def main():
     async with bot:
         await load()
-        await bot.start(os.getenv('TOKEN'))
+        token = os.getenv('TOKEN')
+        if token:
+            await bot.start(token)
+        else:
+            print("❌ TOKEN not found in environment variables!")
 
 asyncio.run(main())

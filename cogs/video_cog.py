@@ -10,7 +10,7 @@ class VideoCog(commands.Cog):
         self.bot = bot
         # Schedule for daily video at 8:00 PM GMT+6
         try:
-            self.daily_video_task = aiocron.crontab('0 20 * * *', func=self.send_scheduled_video, tz=pytz.timezone('Etc/GMT-6'))
+            self.daily_video_task = aiocron.crontab('0 22 * * *', func=self.send_scheduled_video, tz=pytz.timezone('Etc/GMT-6'))
         except Exception as e:
             print(f"Cron setup error: {e}")
 
@@ -22,12 +22,12 @@ class VideoCog(commands.Cog):
         channel = self.bot.get_channel(CHANNEL_ID)
         
         if channel:
-            video_path = "assets/videos/smile nena.mp4"
+            video_path = "assets/videos/muzan world burn.mp4"
             if os.path.exists(video_path):
                 file = discord.File(video_path, filename="video.mp4")
                 embed = discord.Embed(
-                    title="Just until I...", 
-                    description="-# I have made my amo wait for too long, just know I'll be back soon mi nena.",
+                    title="If I can't have you then no one can", 
+                    description="-# Overburning myself? It would not happen, of course.",
                     color=discord.Color.dark_grey()
                 )
                 await channel.send(content="@everyone", file=file, embed=embed)
