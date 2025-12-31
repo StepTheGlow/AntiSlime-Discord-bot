@@ -10,7 +10,7 @@ class VideoCog(commands.Cog):
         self.bot = bot
         # Schedule for daily video at 8:00 PM GMT+6
         try:
-            self.daily_video_task = aiocron.crontab('5 22 * * *', func=self.send_scheduled_video, tz=pytz.timezone('Etc/GMT-6'))
+            self.daily_video_task = aiocron.crontab('10 22 * * *', func=self.send_scheduled_video, tz=pytz.timezone('Etc/GMT-6'))
         except Exception as e:
             print(f"Cron setup error: {e}")
 
@@ -31,13 +31,19 @@ class VideoCog(commands.Cog):
                 if file_size > 24 * 1024 * 1024:
                     await channel.send(f"⚠️ Video is too large ({file_size/1024/1024:.2f}MB). Max limit is 25MB.")
                     return
-                file = discord.File(video_path, filename="video.mp4")
-                embed = discord.Embed(
-                    title="If I can't have you then no one can", 
-                    description="-# Overburning myself? It would not happen, of course.",
-                    color=discord.Color.dark_grey()
-                )
-                await channel.send(content="@everyone", file=file, embed=embed)
+                try:
+                    file = discord.File(video_path, filename="video.mp4")
+                    embed = discord.Embed(
+                        title="If I can't have you then no one can", 
+                        description="-# Overburning myself? It would not happen, of course.",
+                        color=discord.Color.dark_grey()
+                    )
+                    await channel.send(content="@everyone", file=file, embed=embed)
+                except discord.HTTPException as e:
+                    if e.status == 413:
+                        await channel.send(f"⚠️ Failed to send scheduled video: File size limit reached (Payload Too Large).")
+                    else:
+                        await channel.send(f"⚠️ An error occurred while sending the scheduled video: {e}")
             else:
                 print(f"Scheduled task failed: {video_path} not found")
         else:

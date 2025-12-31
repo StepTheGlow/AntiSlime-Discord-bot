@@ -1,0 +1,37 @@
+Exception in callback Cron.set_result(<_GatheringFu... too large')]>)
+handle: <Handle Cron.set_result(<_GatheringFu... too large')]>)>
+Traceback (most recent call last):
+  File "/nix/store/7d088dip86hlzri9sk0h78b63yfmx0a0-python3-3.11.13/lib/python3.11/asyncio/events.py", line 84, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/aiocron/__init__.py", line 119, in set_result
+    raise result
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/aiocron/__init__.py", line 24, in wrapper
+    result = await result
+             ^^^^^^^^^^^^
+  File "/home/runner/workspace/cogs/video_cog.py", line 33, in send_scheduled_video
+    await channel.send(content="@everyone", file=file, embed=embed)
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/discord/abc.py", line 1644, in send
+    data = await state.http.send_message(channel.id, params=params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/discord/http.py", line 762, in request
+    raise HTTPException(response, data)
+discord.errors.HTTPException: 413 Payload Too Large (error code: 40005): Request entity too large
+^CTraceback (most recent call last):
+  File "/nix/store/7d088dip86hlzri9sk0h78b63yfmx0a0-python3-3.11.13/lib/python3.11/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/7d088dip86hlzri9sk0h78b63yfmx0a0-python3-3.11.13/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/main.py", line 59, in main
+    await bot.start(token)
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/discord/client.py", line 824, in start
+    await self.connect(reconnect=reconnect)
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/discord/client.py", line 704, in connect
+    await self.ws.poll_event()
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/discord/gateway.py", line 623, in poll_event
+    msg = await self.socket.receive(timeout=self._max_heartbeat_timeout)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/aiohttp/client_ws.py", line 334, in receive
+    msg = await self._reader.read()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^
