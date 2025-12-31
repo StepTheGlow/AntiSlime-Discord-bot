@@ -16,7 +16,7 @@ class VideoCog(commands.Cog):
     async def send_scheduled_video(self):
         """Internal function to send the video to a specific channel"""
         # Replace with your actual channel ID where you want the video sent
-        CHANNEL_ID = 123456789012345678  # YOU MUST UPDATE THIS
+        CHANNEL_ID = 1336364995721564160  # YOU MUST UPDATE THIS
         channel = self.bot.get_channel(CHANNEL_ID)
         
         if channel:
@@ -24,8 +24,8 @@ class VideoCog(commands.Cog):
             if os.path.exists(video_path):
                 file = discord.File(video_path, filename="video.mp4")
                 embed = discord.Embed(
-                    title="Custom Heading Here", 
-                    description=f"Scheduled video for {datetime.now(pytz.timezone('Etc/GMT-6')).strftime('%Y-%m-%d %H:%M')}\n\n-# @everyone Small bottom text here"
+                    title="Something stirs within you, compelling your heart to race relentlessly.", 
+                    description=f"{datetime.now(pytz.timezone('Etc/GMT-6')).strftime('%Y-%m-%d %H:%M')}\n\n-# @everyone, one such as I, whose presence have been long awaited, has finally returned."
                 )
                 await channel.send(content="@everyone", file=file, embed=embed)
             else:
