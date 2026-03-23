@@ -4,8 +4,10 @@ from dotenv import load_dotenv
 import os
 import asyncio
 from itertools import cycle
+from web import keep_alive
 
 load_dotenv()
+keep_alive()
 intents = discord.Intents.default()
 intents.message_content = True
 bot = commands.Bot(command_prefix="!", intents=intents, case_insensitive=True)
