@@ -2,22 +2,20 @@ import discord
 from discord.ext import commands
 import os
 import aiocron
-import pytz
-from datetime import datetime
 
 class VideoCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         try:
-            self.daily_video_task = aiocron.crontab('55 18 * * *', func=self.send_scheduled_video, tz=pytz.timezone('Etc/GMT-6'))
-            self.foodies_task = aiocron.crontab('0 17 * * *', func=self.send_foodies_message, tz=pytz.timezone('Etc/GMT-6'))
+            self.daily_video_task = aiocron.crontab('55 18 * * *', func=self.send_scheduled_video)
+            self.foodies_task = aiocron.crontab('0 17 * * *', func=self.send_foodies_message)
         except Exception as e:
             print(f"Cron setup error: {e}")
 
    
     async def send_foodies_message(self):
         """Sends a scheduled text message mentioning the Foodies role"""
-        CHANNEL_ID = 1336364995721564160
+        CHANNEL_ID = 1372579374351777812
         channel = self.bot.get_channel(CHANNEL_ID)
         if channel:
             try:
