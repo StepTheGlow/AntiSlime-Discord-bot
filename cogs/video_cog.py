@@ -102,18 +102,24 @@ class VideoCog(commands.Cog):
 
     @commands.command(name="sendmsg")
     async def send_msg(self, ctx, *, message: str = None):
-        """Sends a message as the bot. Works with text or by replying to a message."""
+        """Sends a message as the bot. Works with text, attachments, or by replying to a message."""
+        # Grab any attachments from the command message itself
+        files = [await a.to_file() for a in ctx.message.attachments]
+
         await ctx.message.delete()
 
-        # If replying to a message and no text given, forward that message's content
-        if ctx.message.reference and not message:
+        if ctx.message.reference and not message and not files:
+            # Replying to a message with no extra text/attachments — forward that message
             ref = await ctx.channel.fetch_message(ctx.message.reference.message_id)
-            content = ref.content
-            if not content:
+            ref_files = [await a.to_file() for a in ref.attachments]
+            content = ref.content or None
+            if not content and not ref_files:
                 return
-            await ctx.send(content)
-        elif message:
-            await ctx.send(message)
+            await ctx.send(content=content, files=ref_files)
+        else:
+            if not message and not files:
+                return
+            await ctx.send(content=message, files=files)
 
 async def setup(bot):
     await bot.add_cog(VideoCog(bot))
