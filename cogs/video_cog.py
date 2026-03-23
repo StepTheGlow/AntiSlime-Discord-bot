@@ -9,7 +9,7 @@ class VideoCog(commands.Cog):
         self.bot = bot
         try:
             self.daily_video_task = aiocron.crontab('55 18 * * *', func=self.send_scheduled_video, tz=pytz.timezone('Etc/GMT-6'))
-            self.foodies_task = aiocron.crontab('0 17 * * *', func=self.send_foodies_message, tz=pytz.timezone('Etc/GMT-6'))
+            self.foodies_task = aiocron.crontab('0 16 21 * *', func=self.send_foodies_message, tz=pytz.timezone('Etc/GMT-6'))
         except Exception as e:
             print(f"Cron setup error: {e}")
 
@@ -22,7 +22,7 @@ class VideoCog(commands.Cog):
             try:
                 foodies_role = discord.utils.get(channel.guild.roles, name="Foodies")
                 role_mention = foodies_role.mention if foodies_role else "@Foodies"
-                await channel.send(f"{role_mention} <t:1774314000:f>")
+                await channel.send(f"{role_mention} yokoso <t:1774314000:f>")
             except Exception as e:
                 print(f"Foodies message failed: {e}")
         else:
