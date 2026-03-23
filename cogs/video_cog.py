@@ -8,13 +8,27 @@ from datetime import datetime
 class VideoCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        # Schedule for daily video at 8:00 PM GMT+6
         try:
-            self.daily_video_task = aiocron.crontab('30 18 * * *', func=self.send_scheduled_video, tz=pytz.timezone('Etc/GMT-6'))
+            self.daily_video_task = aiocron.crontab('55 18 * * *', func=self.send_scheduled_video, tz=pytz.timezone('Etc/GMT-6'))
+            self.foodies_task = aiocron.crontab('0 17 * * *', func=self.send_foodies_message, tz=pytz.timezone('Etc/GMT-6'))
         except Exception as e:
             print(f"Cron setup error: {e}")
 
    
+    async def send_foodies_message(self):
+        """Sends a scheduled text message mentioning the Foodies role"""
+        CHANNEL_ID = 1336364995721564160
+        channel = self.bot.get_channel(CHANNEL_ID)
+        if channel:
+            try:
+                foodies_role = discord.utils.get(channel.guild.roles, name="Foodies")
+                role_mention = foodies_role.mention if foodies_role else "@Foodies"
+                await channel.send(f"{role_mention} <t:1774314000:f>")
+            except Exception as e:
+                print(f"Foodies message failed: {e}")
+        else:
+            print(f"Foodies message failed: Channel {CHANNEL_ID} not found")
+
     async def send_scheduled_video(self):
         """Internal function to send the video to a specific channel"""
         # Replace with your actual channel ID where you want the video sent
@@ -22,7 +36,7 @@ class VideoCog(commands.Cog):
         channel = self.bot.get_channel(CHANNEL_ID)
         
         if channel:
-            video_path = "assets/videos/Oreki sad edit  amvedit.mp4"
+            video_path = "assets/videos/silent voice edit.mp4"
             if os.path.exists(video_path):
                 # Discord's file size limit is 25MB for free users, but sometimes 
                 # uploads fail slightly below that or due to network issues.
@@ -30,8 +44,8 @@ class VideoCog(commands.Cog):
                 
                 file = discord.File(video_path, filename="video.mp4")
                 embed = discord.Embed(
-                    title="I feel like I have lost something...",
-                    description="-# Why does it feels so lonely....and empty?",
+                    title="I just want you to say...",
+                    description="-# Give me the words...give me the words....that tell me...",
                         color=discord.Color.dark_grey()
                     )
                 await channel.send(content="@everyone", file=file, embed=embed)
