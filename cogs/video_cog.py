@@ -100,5 +100,20 @@ class VideoCog(commands.Cog):
         )
         await interaction.followup.send(content="@everyone", file=file, embed=embed)
 
+    @commands.command(name="sendmsg")
+    async def send_msg(self, ctx, *, message: str = None):
+        """Sends a message as the bot. Works with text or by replying to a message."""
+        await ctx.message.delete()
+
+        # If replying to a message and no text given, forward that message's content
+        if ctx.message.reference and not message:
+            ref = await ctx.channel.fetch_message(ctx.message.reference.message_id)
+            content = ref.content
+            if not content:
+                return
+            await ctx.send(content)
+        elif message:
+            await ctx.send(message)
+
 async def setup(bot):
     await bot.add_cog(VideoCog(bot))
