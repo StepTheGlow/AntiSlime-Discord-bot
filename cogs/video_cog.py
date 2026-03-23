@@ -108,14 +108,16 @@ class VideoCog(commands.Cog):
 
         await ctx.message.delete()
 
-        if ctx.message.reference and not message and not files:
-            # Replying to a message with no extra text/attachments — forward that message
+        # If replying to a message, always grab its attachments (images, videos, files)
+        if ctx.message.reference:
             ref = await ctx.channel.fetch_message(ctx.message.reference.message_id)
             ref_files = [await a.to_file() for a in ref.attachments]
-            content = ref.content or None
-            if not content and not ref_files:
+            # Use referenced message's text only if no text was typed
+            content = message or ref.content or None
+            all_files = files + ref_files
+            if not content and not all_files:
                 return
-            await ctx.send(content=content, files=ref_files)
+            await ctx.send(content=content, files=all_files)
         else:
             if not message and not files:
                 return
