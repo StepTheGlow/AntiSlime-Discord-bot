@@ -9,7 +9,7 @@ class VideoCog(commands.Cog):
         self.bot = bot
         try:
             self.daily_video_task = aiocron.crontab('55 18 * * *', func=self.send_scheduled_video, tz=pytz.timezone('Etc/GMT-6'))
-            self.foodies_task = aiocron.crontab('0 16 21 * *', func=self.send_foodies_message, tz=pytz.timezone('Etc/GMT-6'))
+            self.foodies_task = aiocron.crontab('0 16 30 * *', func=self.send_foodies_message, tz=pytz.timezone('Etc/GMT-6'))
         except Exception as e:
             print(f"Cron setup error: {e}")
 

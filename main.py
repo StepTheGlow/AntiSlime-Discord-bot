@@ -52,12 +52,29 @@ async def load():
         print(f"Failed to load extension {filename}: {e}")
 
 async def main():
-    async with bot:
-        await load()
-        token = os.getenv('TOKEN')
-        if token:
-            await bot.start(token)
+    token = os.getenv('TOKEN')
+    if not token:
+        print("❌ TOKEN not found in environment variables!")
+        return
+
+    retry_delay = 5
+    while True:
+        try:
+            async with bot:
+                await load()
+                await bot.start(token)
+        except discord.errors.HTTPException as e:
+            if e.status == 429:
+                print(f"⚠️ Rate limited by Discord. Waiting {retry_delay}s before retrying...")
+                await asyncio.sleep(retry_delay)
+                retry_delay = min(retry_delay * 2, 300)
+            else:
+                print(f"❌ HTTP error: {e}")
+                await asyncio.sleep(retry_delay)
+        except Exception as e:
+            print(f"❌ Error starting bot: {e}")
+            await asyncio.sleep(retry_delay)
         else:
-            print("❌ TOKEN not found in environment variables!")
+            break
 
 asyncio.run(main())
