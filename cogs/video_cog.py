@@ -101,27 +101,28 @@ class VideoCog(commands.Cog):
         await interaction.followup.send(content="@everyone", file=file, embed=embed)
 
     @commands.command(name="sendmsg")
-    async def send_msg(self, ctx, *, message: str = None):
-        """Sends a message as the bot. Works with text, attachments, or by replying to a message."""
+    async def send_msg(self, ctx, channel: discord.TextChannel = None, *, message: str = None):
+        """Sends a message as the bot. Optionally specify a channel by mentioning it first."""
         # Grab any attachments from the command message itself
         files = [await a.to_file() for a in ctx.message.attachments]
 
         await ctx.message.delete()
 
+        target = channel or ctx.channel
+
         # If replying to a message, always grab its attachments (images, videos, files)
         if ctx.message.reference:
             ref = await ctx.channel.fetch_message(ctx.message.reference.message_id)
             ref_files = [await a.to_file() for a in ref.attachments]
-            # Use referenced message's text only if no text was typed
             content = message or ref.content or None
             all_files = files + ref_files
             if not content and not all_files:
                 return
-            await ctx.send(content=content, files=all_files)
+            await target.send(content=content, files=all_files)
         else:
             if not message and not files:
                 return
-            await ctx.send(content=message, files=files)
+            await target.send(content=message, files=files)
 
 async def setup(bot):
     await bot.add_cog(VideoCog(bot))
